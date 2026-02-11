@@ -111,6 +111,7 @@ func Run(containerID string) error {
 
 // buildMountArg converts a DevPod Mount struct to an Apple Container --mount flag value.
 // Format: type=<type>,source=<source>,target=<target>[,readonly]
+// Docker-specific options (consistency, bind-propagation, etc.) are filtered out.
 func buildMountArg(m *Mount) string {
 	if m == nil || m.Target == "" {
 		return ""
@@ -130,10 +131,38 @@ func buildMountArg(m *Mount) string {
 
 	parts = append(parts, "target="+m.Target)
 
-	// Append any extra options from Other
+	// Append extra options from Other, filtering out Docker-specific ones
+	// that Apple Container doesn't support
 	for _, o := range m.Other {
+		if isUnsupportedMountOption(o) {
+			Logf("Warning: filtering out unsupported mount option: %s", o)
+			continue
+		}
 		parts = append(parts, o)
 	}
 
 	return strings.Join(parts, ",")
+}
+
+// isUnsupportedMountOption returns true for Docker-specific mount options
+// that Apple Container does not support.
+func isUnsupportedMountOption(opt string) bool {
+	lower := strings.ToLower(opt)
+	unsupported := []string{
+		"consistency=",
+		"bind-propagation=",
+		"bind-nonrecursive",
+		"tmpfs-size=",
+		"tmpfs-mode=",
+		"volume-driver=",
+		"volume-label=",
+		"volume-nocopy",
+		"volume-opt=",
+	}
+	for _, prefix := range unsupported {
+		if strings.HasPrefix(lower, prefix) {
+			return true
+		}
+	}
+	return false
 }
