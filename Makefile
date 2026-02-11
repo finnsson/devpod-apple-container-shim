@@ -19,6 +19,22 @@ test-build: build
 	@echo "Binary available at $(BUILD_DIR)/$(BINARY_NAME)"
 	@echo "Test with: $(BUILD_DIR)/$(BINARY_NAME) arch"
 
+lint:
+	go vet -lostcancel=false ./...
+	go tool staticcheck ./...
+	deadcode
+	govulncheck
+	nilaway
+
+deadcode: # identify dead code
+	go tool deadcode ./cmd/api/...
+
+govulncheck: # identify vulnerabilities in golang dependencies
+	go tool govulncheck ./...
+
+nilaway: # identify nil pointer dereferences or unnecessary nil checks
+	go tool nilaway -include-pkgs="github.com/finnsson/devpod-apple-container-shim" -test=false  ./...
+
 vibe-context/container.markdown:
 	curl https://raw.githubusercontent.com/apple/container/refs/heads/main/docs/command-reference.md \
 		-o vibe-context/container.markdown
