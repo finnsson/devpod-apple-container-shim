@@ -1,0 +1,31 @@
+name: apple-container
+version: v0.0.1
+description: "DevPod provider for Apple Container runtime on macOS (Apple Silicon)"
+home: https://github.com/finnsson/devpod-apple-container-shim
+
+options:
+  CONTAINER_PATH:
+    description: "Path to the Apple Container CLI binary"
+    default: "/usr/local/bin/container"
+    required: false
+  SHIM_PATH:
+    description: "Path to the devpod-apple-container-shim binary"
+    default: ""
+    required: false
+
+agent:
+  local: true
+  driver: custom
+  custom:
+    findDevContainer: ["${SHIM_PATH}", "find", "${DEVCONTAINER_ID}"]
+    commandDevContainer: ["${SHIM_PATH}", "command", "${DEVCONTAINER_ID}"]
+    runDevContainer: ["${SHIM_PATH}", "run", "${DEVCONTAINER_ID}"]
+    startDevContainer: ["${SHIM_PATH}", "start", "${DEVCONTAINER_ID}"]
+    stopDevContainer: ["${SHIM_PATH}", "stop", "${DEVCONTAINER_ID}"]
+    deleteDevContainer: ["${SHIM_PATH}", "delete", "${DEVCONTAINER_ID}"]
+    targetArchitecture: ["${SHIM_PATH}", "arch"]
+    getDevContainerLogs: ["${SHIM_PATH}", "logs", "${DEVCONTAINER_ID}"]
+
+exec:
+  command: |-
+    ${DEVPOD} helper sh -c "${COMMAND}"
