@@ -12,22 +12,21 @@ options:
 agent:
   local: true
   driver: custom
+  binaries:
+    APPLE_CONTAINER_SHIM:
+      - os: darwin
+        arch: arm64
+        path: "https://github.com/finnsson/devpod-apple-container-shim/releases/download/v0.0.1/devpod-apple-container-shim-darwin-arm64"
+        # checksum: # TODO: fill in after first release build
   custom:
-    findDevContainer: ["${APPLE_CONTAINER_SHIM}", "find", "${DEVCONTAINER_ID}"]
-    commandDevContainer: ["${APPLE_CONTAINER_SHIM}", "command", "${DEVCONTAINER_ID}"]
-    runDevContainer: ["${APPLE_CONTAINER_SHIM}", "run", "${DEVCONTAINER_ID}"]
-    startDevContainer: ["${APPLE_CONTAINER_SHIM}", "start", "${DEVCONTAINER_ID}"]
-    stopDevContainer: ["${APPLE_CONTAINER_SHIM}", "stop", "${DEVCONTAINER_ID}"]
-    deleteDevContainer: ["${APPLE_CONTAINER_SHIM}", "delete", "${DEVCONTAINER_ID}"]
-    targetArchitecture: ["${APPLE_CONTAINER_SHIM}", "arch"]
-    getDevContainerLogs: ["${APPLE_CONTAINER_SHIM}", "logs", "${DEVCONTAINER_ID}"]
-
-binaries:
-  APPLE_CONTAINER_SHIM:
-    - os: darwin
-      arch: arm64
-      path: "https://github.com/finnsson/devpod-apple-container-shim/releases/download/v0.0.1/devpod-apple-container-shim-darwin-arm64"
-      # checksum: # TODO: fill in after first release build
+    findDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} find ${DEVCONTAINER_ID}"]
+    commandDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} command ${DEVCONTAINER_ID}"]
+    runDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} run ${DEVCONTAINER_ID}"]
+    startDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} start ${DEVCONTAINER_ID}"]
+    stopDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} stop ${DEVCONTAINER_ID}"]
+    deleteDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} delete ${DEVCONTAINER_ID}"]
+    targetArchitecture: ["sh", "-c", "${APPLE_CONTAINER_SHIM} arch"]
+    getDevContainerLogs: ["sh", "-c", "${APPLE_CONTAINER_SHIM} logs ${DEVCONTAINER_ID}"]
 
 exec:
   command: |-

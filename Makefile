@@ -18,3 +18,13 @@ install: build
 test-build: build
 	@echo "Binary available at $(BUILD_DIR)/$(BINARY_NAME)"
 	@echo "Test with: $(BUILD_DIR)/$(BINARY_NAME) arch"
+
+vibe-context/container.markdown:
+	curl https://raw.githubusercontent.com/apple/container/refs/heads/main/docs/command-reference.md \
+		-o vibe-context/container.markdown
+
+vibe-context/container-list-all-format.json:
+	container list --all --format json > vibe-context/container-list-all-format.json
+
+vibe-context/container-inspect.json: vibe-context/container-list-all-format.json
+	container inspect $$(jq -r '.[].configuration.id' vibe-context/container-list-all-format.json) > vibe-context/container-inspect.json
