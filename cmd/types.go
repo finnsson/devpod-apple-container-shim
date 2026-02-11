@@ -1,6 +1,7 @@
+// Package cmd implements the DevPod custom driver commands for Apple Container.
 package cmd
 
-// DevPod ContainerDetails - the JSON structure DevPod expects from findDevContainer
+// ContainerDetails is the JSON structure DevPod expects from findDevContainer.
 type ContainerDetails struct {
 	ID      string                 `json:"ID,omitempty"`
 	Created string                 `json:"Created,omitempty"`
@@ -20,7 +21,7 @@ type ContainerDetailsConfig struct {
 	LegacyImage string            `json:"Image,omitempty"`
 }
 
-// DevPod RunOptions - JSON received via DEVCONTAINER_RUN_OPTIONS env var
+// RunOptions is the JSON received via the DEVCONTAINER_RUN_OPTIONS env var.
 type RunOptions struct {
 	UID            string            `json:"uid,omitempty"`
 	Image          string            `json:"image,omitempty"`
@@ -44,8 +45,8 @@ type Mount struct {
 	Other    []string `json:"other,omitempty"`
 }
 
-// Apple Container JSON output structures
-// Matches actual `container list --format json` and `container inspect` output.
+// AppleContainerEntry represents a single entry from Apple Container's
+// `container list --format json` or `container inspect` output.
 type AppleContainerEntry struct {
 	Configuration AppleContainerConfig `json:"configuration"`
 	Status        string               `json:"status"`
