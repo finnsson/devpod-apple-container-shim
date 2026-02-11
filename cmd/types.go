@@ -44,41 +44,51 @@ type Mount struct {
 	Other    []string `json:"other,omitempty"`
 }
 
-// Apple Container list --format json output structures
-type AppleContainerListEntry struct {
-	ID     string            `json:"id"`
-	Name   string            `json:"name"`
-	Image  string            `json:"image"`
-	State  string            `json:"state"`
-	Status string            `json:"status"`
-	Labels map[string]string `json:"labels"`
+// Apple Container JSON output structures
+// Matches actual `container list --format json` and `container inspect` output.
+type AppleContainerEntry struct {
+	Configuration AppleContainerConfig `json:"configuration"`
+	Status        string               `json:"status"`
+	StartedDate   float64              `json:"startedDate"` // CFAbsoluteTime: seconds since 2001-01-01
+	Networks      []interface{}        `json:"networks,omitempty"`
 }
 
-// Apple Container inspect output structure
-type AppleContainerInspect struct {
-	ID            string                       `json:"id"`
-	Name          string                       `json:"name"`
-	Image         string                       `json:"image"`
-	State         string                       `json:"state"`
-	Status        string                       `json:"status"`
-	CreatedAt     string                       `json:"createdAt"`
-	StartedAt     string                       `json:"startedAt"`
-	Labels        map[string]string            `json:"labels"`
-	Config        *AppleContainerInspectConfig `json:"config"`
-	ProcessConfig *AppleContainerProcessConfig `json:"processConfig"`
+type AppleContainerConfig struct {
+	ID          string                    `json:"id"`
+	Labels      map[string]string         `json:"labels,omitempty"`
+	Image       AppleContainerImage       `json:"image"`
+	InitProcess AppleContainerInitProcess `json:"initProcess"`
+	Platform    *AppleContainerPlatform   `json:"platform,omitempty"`
 }
 
-type AppleContainerInspectConfig struct {
-	Image      string            `json:"image"`
-	Env        map[string]string `json:"env"`
-	Labels     map[string]string `json:"labels"`
-	WorkingDir string            `json:"workingDir"`
-	User       string            `json:"user"`
-	Entrypoint []string          `json:"entrypoint"`
-	Cmd        []string          `json:"cmd"`
+type AppleContainerImage struct {
+	Reference  string                    `json:"reference"`
+	Descriptor *AppleContainerDescriptor `json:"descriptor,omitempty"`
 }
 
-type AppleContainerProcessConfig struct {
-	User string            `json:"user"`
-	Env  map[string]string `json:"env"`
+type AppleContainerDescriptor struct {
+	MediaType string `json:"mediaType,omitempty"`
+	Digest    string `json:"digest,omitempty"`
+	Size      int64  `json:"size,omitempty"`
+}
+
+type AppleContainerInitProcess struct {
+	Executable       string              `json:"executable,omitempty"`
+	Arguments        []string            `json:"arguments,omitempty"`
+	Environment      []string            `json:"environment,omitempty"`
+	WorkingDirectory string              `json:"workingDirectory,omitempty"`
+	User             *AppleContainerUser `json:"user,omitempty"`
+}
+
+type AppleContainerUser struct {
+	Raw *AppleContainerRawUser `json:"raw,omitempty"`
+}
+
+type AppleContainerRawUser struct {
+	UserString string `json:"userString,omitempty"`
+}
+
+type AppleContainerPlatform struct {
+	Architecture string `json:"architecture,omitempty"`
+	OS           string `json:"os,omitempty"`
 }
