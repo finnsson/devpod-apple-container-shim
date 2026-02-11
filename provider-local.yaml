@@ -7,7 +7,7 @@ options:
   CONTAINER_PATH:
     description: "Path to the Apple Container CLI binary"
     default: "/usr/local/bin/container"
-    required: true
+    required: false
   SHIM_PATH:
     description: "Path to the devpod-apple-container-shim binary"
     default: "/Users/oscarfinnsson/code/GitHub/devpod-apple-container-shim/build/devpod-apple-container-shim"
@@ -16,11 +16,6 @@ options:
 agent:
   local: true
   driver: custom
-  binaries:
-    SHIM:
-      - os: darwin
-        arch: arm64
-        path: /Users/oscarfinnsson/code/GitHub/devpod-apple-container-shim/build/devpod-apple-container-shim
   custom:
     findDevContainer: ["sh", "-c", "${SHIM_PATH} find ${DEVCONTAINER_ID}"]
     commandDevContainer: ["sh", "-c", "${SHIM_PATH} command ${DEVCONTAINER_ID}"]
