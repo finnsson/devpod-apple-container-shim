@@ -16,8 +16,8 @@ agent:
     APPLE_CONTAINER_SHIM:
       - os: darwin
         arch: arm64
-        path: "https://github.com/finnsson/devpod-apple-container-shim/releases/download/v0.0.1/devpod-apple-container-shim-darwin-arm64"
-        # checksum: # TODO: fill in after first release build
+        path: "https://github.com/finnsson/devpod-apple-container-shim/releases/download/v0.0.1/devpod-apple-container-shim"
+        checksum: c9f3bba6a5e6b07f5ae45c9e2de913ce78e0b0d2ec3db35814d5dd8b8066ba15
   custom:
     findDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} find ${DEVCONTAINER_ID}"]
     commandDevContainer: ["sh", "-c", "${APPLE_CONTAINER_SHIM} command ${DEVCONTAINER_ID}"]
