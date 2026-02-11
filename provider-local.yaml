@@ -7,24 +7,29 @@ options:
   CONTAINER_PATH:
     description: "Path to the Apple Container CLI binary"
     default: "/usr/local/bin/container"
-    required: false
+    required: true
   SHIM_PATH:
     description: "Path to the devpod-apple-container-shim binary"
-    default: ""
+    default: "/Users/oscarfinnsson/code/GitHub/devpod-apple-container-shim/build/devpod-apple-container-shim"
     required: false
 
 agent:
   local: true
   driver: custom
+  binaries:
+    SHIM:
+      - os: darwin
+        arch: arm64
+        path: /Users/oscarfinnsson/code/GitHub/devpod-apple-container-shim/build/devpod-apple-container-shim
   custom:
-    findDevContainer: ["${SHIM_PATH}", "find", "${DEVCONTAINER_ID}"]
-    commandDevContainer: ["${SHIM_PATH}", "command", "${DEVCONTAINER_ID}"]
-    runDevContainer: ["${SHIM_PATH}", "run", "${DEVCONTAINER_ID}"]
-    startDevContainer: ["${SHIM_PATH}", "start", "${DEVCONTAINER_ID}"]
-    stopDevContainer: ["${SHIM_PATH}", "stop", "${DEVCONTAINER_ID}"]
-    deleteDevContainer: ["${SHIM_PATH}", "delete", "${DEVCONTAINER_ID}"]
-    targetArchitecture: ["${SHIM_PATH}", "arch"]
-    getDevContainerLogs: ["${SHIM_PATH}", "logs", "${DEVCONTAINER_ID}"]
+    findDevContainer: ["sh", "-c", "${SHIM_PATH} find ${DEVCONTAINER_ID}"]
+    commandDevContainer: ["sh", "-c", "${SHIM_PATH} command ${DEVCONTAINER_ID}"]
+    runDevContainer: ["sh", "-c", "${SHIM_PATH} run ${DEVCONTAINER_ID}"]
+    startDevContainer: ["sh", "-c", "${SHIM_PATH} start ${DEVCONTAINER_ID}"]
+    stopDevContainer: ["sh", "-c", "${SHIM_PATH} stop ${DEVCONTAINER_ID}"]
+    deleteDevContainer: ["sh", "-c", "${SHIM_PATH} delete ${DEVCONTAINER_ID}"]
+    targetArchitecture: ["sh", "-c", "${SHIM_PATH} arch"]
+    getDevContainerLogs: ["sh", "-c", "${SHIM_PATH} logs ${DEVCONTAINER_ID}"]
 
 exec:
   command: |-
